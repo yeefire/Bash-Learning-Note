@@ -16,7 +16,7 @@
 ## 变量
 
 ### 定义变量
-* `var=Hello World!` 就是这么简单就声明了一个变量。
+* `var=Hello World!` 就是这么简单就声明了一个全局变量。
 * `varnum=32` 但是要注意的是:这样直接声明的变量不论存入的数据是什么类型，都会当做字符串对待。
 * 例如：
    
@@ -70,7 +70,38 @@ var2=${PATH//bin/Bin}
 echo $var2
     输出  /usr/local/Bin:/usr/Bin:/Bin:/usr/sBin:/sBin:/Applications/VMware Fusion.app/Contents/Public:/usr/local/mysql/Bin
 ```
-## 变量的测试
+
+### 局部变量和全局变量
+
+* 不做特殊声明，Shell中变量都是全局变量
+  
+#### 局部变量
+* 定义局部变量时，使用local关键字
+* 如果函数内与函数外变量名重复，那么在函数内会覆盖函数外的全局变量。
+* 局部变量使用`local`关键字声明
+* `local var_local="Hello World"`
+* 例子：
+    ```bash
+    var1="Hello World"
+    function new
+    {
+            local var2="Local Var"
+            var3="Public Var"
+    }
+    # 调用函数
+    new
+    echo var1=$var1
+    echo var2=$var2
+    echo var3=$var3
+        输出
+        var1=Hello World
+        var2=
+        var3=Public Var
+    ```
+    通过例子可以看出用`local`关键字声明出的var2变量在其所在函数外是无法使用的。
+
+
+### 变量的测试
 很少会用到，一般来说我们使用if-else来进行替换变量的测试，只不过if-else麻烦一些。变量的检查一般用于初始化变量。
 ![变量的测试](https://blog.yeefire.com/usr/uploads/2019/07/2996501335.jpg)
 
