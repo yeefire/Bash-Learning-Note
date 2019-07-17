@@ -221,3 +221,63 @@ echo ${varstr:0:-7}
 |:-|:-|
 |return|`return通常用来返回执行状态！执行成功返回 0 执行失败返回 1 ，返回值范围(0~255)` |
 |echo|`echo通常用来返回字符串或一个列表`
+
+### 函数库
+
+* 使用函数库，我们可以避免对一段代码重复的书写，我们可以将常有的一些方法封装到函数库中。
+* 写好的函数库一般不直接执行，而是由其他的脚本进行调用。
+
+例如现在要定义一个函数库，要满足以下几个函数：
+  * 1、加法函数add
+  * 2、减法函数reduce
+  * 3、乘法函数multiple
+  * 4、除法函数divide
+  * 5、打印系统的运行情况的函数sys_info,该函数用来显示内存运行情况。
+  ```bash
+    function add
+    {
+        echo $(($1+$2))
+    }
+    function reduce
+    {
+        echo $(($1-$2))
+    }
+    function multiple
+    {
+        echo $(($1\*$2))
+    }
+    function divide
+    {
+        echo $(($1/$2))
+    }
+    function sys_info
+    {
+        echo "内存的情况："
+        echo `free -m`
+        echo "================================="
+        echo "硬盘剩余空间："
+        echo `df -h`
+    }
+  ```
+
+**OK,我们写好了一个函数库，把它命名为lib_test。现在需要来写一个普通脚本去调用我们的函数库。**
+```bash
+#!/bin/bash
+#
+
+#我们用一个.表示要调用函数库，空格后面是函数库的位置。我这里的函数库和脚本文件在同级目录，所以用./lib_test来访问函数库
+. ./lib_test
+
+add 1 3
+reduce 5 2
+multiple 5 2
+divide 9 3
+sys_info
+
+```
+
+
+
+
+
+
