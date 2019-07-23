@@ -276,6 +276,71 @@ sys_info
 
 ```
 
+## 条件、判断、分支
+### if判断
+```bash
+if [ 条件语句 ];then
+    满足条件执行的内容
+else if [ 条件语句 ];then
+    第一个if条件不满足，但第二个条件满足执行的内容
+else
+    都不满足条件后执行内容
+fi
+```
+* bash/shell 对空格非常敏感
+* 如果按照下面的例子练习if语句时运行报错那么请耐心仔细检查空格或语法。
+
+**现在我们通过一个实例来学习if**
+
+要求：
+* 1、检测nginx服务是否正在运行
+* 2、如果检测到nginx服务已经宕掉，那么重新启动它！
+* 3、在测试的时候先把nginx服务手动停止`service nginx stop`
+  
+```bash
+#!/bin/bash
+#
+if [ `ps -ef | grep nginx | grep -v grep | wc -l` -eq 0 ];then
+    #检查nginx进程，如果没有进程的话(grep与wc筛选后没有任何内容)，那么就启动它吧！
+    echo "Nginx服务已宕掉！"
+    service nginx start
+    echo "Nginx已经重新启动！"
+else
+    echo "Nginx服务正常"
+fi
+
+    输出：
+    Nginx服务已宕掉！
+    Starting nginx...  done
+    Nginx已经重新启动
+```
+
+### while循环
+
+刚才学习了if条件判断，我们可以来监测nginx服务是否宕掉，但是它需要我们每次都执行它这个脚本才能够去检测nginx。那么如果知道了while循环，是不是就可以循环去监测它了？
+```bash
+while 条件语句
+do
+    满足条件执行的内容
+done
+```
+例子要求：那么我们在if的例子基础上来完善一下它，让它每隔1分钟就检测一下Nginx服务
+```bash
+while true
+do
+    if [ `ps -ef | grep nginx | grep -v grep | wc -l` -eq 0 ];then
+        #检查nginx进程，如果没有进程的话(grep与wc筛选后没有任何内容)，那么就启动它吧！
+        echo "Nginx服务已宕掉！"
+        service nginx start
+        echo "Nginx已经重新启动！"
+    else
+        echo "Nginx服务正常"
+    fi
+    # 60秒后再次执行循环体
+    sleep 60
+done
+```
+我们使用while-true死循环来重复监测Nginx服务，每次循环过后都休眠60s后再次执行循环体！
 
 
 
