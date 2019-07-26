@@ -342,7 +342,55 @@ done
 ```
 我们使用while-true死循环来重复监测Nginx服务，每次循环过后都休眠60s后再次执行循环体！
 
+## sed 流编辑器
 
+* `第一种形式：stdout | sed [option] "pattern command"`
+* `第二种形式：sed [option] "pattern command" fileaddress`
 
+### 简介：
+> Linux sed 命令是利用脚本来处理文本文件。
+sed 可依照脚本的指令来处理、编辑文本文件。
+sed 主要用来自动编辑一个或多个文件、简化对文件的反复操作、编写转换程序等。
 
+### 选项 option(常用)
 
+|选项|含义|
+|-|-|
+|-n|只打印模式匹配行|
+|-e|直接在命令行进行sed编辑，默认选项|
+|-f|编辑的操作方式保存在文件中，指定文件执行|
+|-r|支持扩展正则表达式|
+|-i|直接修改文件内容|
+
+**需要注意的是sed在处理文本时默认每一行都会输出出来，如果只想打印与自己设置好的匹行，需要选项中使用`-n`**
+
+```bash
+# 我们先创建一个用来测试的文本
+    echo "I Like python \nI Like Python \nI Like PYTHON" > text.txt
+# 现在我们直接使用sed来输出text.txt文件里面的内容
+    sed n text.txt
+        输出：
+            I Like python
+            I Like Python
+            I Like PYTHON
+# 现在我们来进行过滤，我们只要小写的python匹配行
+    sed '/python/p' text.txt
+        输出：
+        I Like python
+        I Like python
+        I Like Python
+        I Like PYTHON
+        你会发现为什么I Like python会输出两行，而且还把其他的输出出来了？
+        需要注意的是sed在处理文本时默认每一行都会输出出来，如果只想打印与自己设置好的匹行，需要选项中使用`-n`
+# 那么我们加上 -n 选项再试试
+    sed -n '/python/p' text.txt
+        输出：
+        I Like python
+        这回没有问题了，去掉非匹配行，留下的就是我们想要的！
+# 如果我既要 python也要PYTHON?
+    sed -n -e '/python/p' -e '/PYTHON/p' text.txt
+        输出：
+        I Like python
+        I Like PYTHON
+        使用 -e 可以连接两个或多个匹配规则
+```
